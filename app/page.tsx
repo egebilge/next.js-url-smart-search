@@ -1,27 +1,26 @@
-import { CarList } from "@/components/car-list";
-import { SearchBar } from "@/components/search-bar";
-import { Suspense } from "react";
+import { VehicleGrid } from "@/components/vehicle-grid";
+import { VehicleSearchBox } from "@/components/vehicle-search-box";
 
 type HomeProps = {
-  searchParams: Promise<{
-    [key: string]: string | string[] | undefined;
-  }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function Home({ searchParams }: HomeProps) {
-  const query = (await searchParams).q as string | undefined;
-  // i'll do semantic search for the user with the query
-  // and return the results
+export default async function MainPage({ searchParams }: HomeProps) {
+  const querySearch = (await searchParams)?.search as string | undefined;
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-background">
-      <main>
-        <Suspense fallback={<div>Loading search bar...</div>}>
-          <SearchBar />
-        </Suspense>
-        <Suspense fallback={<div>Loading cars...</div>}>
-          <CarList query={query} />
-        </Suspense>
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-blue-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <header className="w-full py-10 flex flex-col items-center">
+        <h1 className="text-4xl font-extrabold text-blue-700 dark:text-blue-300 mb-2 tracking-tight">
+          Smart Vehicle Search
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">
+          Filter vehicles by entering brand, model, or details.
+        </p>
+        <VehicleSearchBox />
+      </header>
+      <main className="w-full max-w-6xl flex-1">
+        <VehicleGrid querySearch={querySearch} />
       </main>
     </div>
   );
