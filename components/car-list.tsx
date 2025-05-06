@@ -1,8 +1,3 @@
-"use client";
-
-import { useSearchParams } from "next/navigation";
-import React from "react";
-
 type Car = {
   id: number;
   engine: string;
@@ -32,23 +27,19 @@ const result: Car[] = [
   },
 ];
 
-function CarList() {
-  const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("q");
+type CarListProps = {
+  query: string | undefined;
+};
 
-  const filteredResult = React.useMemo(() => {
-    return result.filter(
-      (car) => {
-        const searchTerm = searchQuery?.toLowerCase() ?? "";
-        return (
-          car.name.toLowerCase().includes(searchTerm) ||
-          car.description.toLowerCase().includes(searchTerm) ||
-          car.engine.toLowerCase().includes(searchTerm)
-        );
-      },
-      [searchQuery],
+async function CarList({ query }: CarListProps) {
+  const filteredResult = result.filter((car) => {
+    const searchTerm = query?.toLowerCase() ?? "";
+    return (
+      car.name.toLowerCase().includes(searchTerm) ||
+      car.description.toLowerCase().includes(searchTerm) ||
+      car.engine.toLowerCase().includes(searchTerm)
     );
-  }, [searchQuery]);
+  });
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 p-4 md:p-8">
